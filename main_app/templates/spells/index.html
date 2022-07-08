@@ -1,0 +1,15 @@
+{% extends 'base.html' %} {% block content %}
+
+<h1>Spells List</h1>
+
+{% for spell in object_list %}
+<div class="card">
+    <a href="{% url 'spells_detail' spell.id %}">
+        <div class="card-content">
+            <span class="card-title">{{spell.name}}
+            </span> {{spell.action}}   
+        </div>
+    </a>
+</div>
+
+{% endfor %} {% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %} {% block content %}
+
+<h1> Obliviate</h1>
+
+<h4>
+    Are you sure you want to erase the memory of this wizard
+    <span class="teal-text">{{ objects.name }} </span>?
+</h4>
+
+<form action="" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Yes - Obliviate" class="btn" />
+    <a href="{% url 'detail' wizard.id %}">Cancel</a>
+</form>
+
+{% endblock %}

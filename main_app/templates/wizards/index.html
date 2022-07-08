@@ -1,0 +1,20 @@
+{% extends 'base.html' %} {% block content%}
+
+<h1>Registered Wizards</h1>
+
+{% for wizard in wizards %}
+
+<div class="card">
+    <a href="{% url 'detail' wizard.id %}">
+
+        <div class="card-content">
+            <span class="card-title">{{ wizard.name }}</span>
+            <!-- <p>Owner: {{ wand.owner }}</p> -->
+            <p>Age: {{ wizard.age }}</p>
+            <p>House: {{ wizard.house }}</p>
+            <p>Profession: {{ wizard.profession }}</p>
+            
+        </div>
+    </a>
+</div>
+{% endfor %} {% endblock %}

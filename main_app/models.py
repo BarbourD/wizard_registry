@@ -37,3 +37,10 @@ class Wand(models.Model):
     wizard = models.ForeignKey(Wizard, on_delete=models.CASCADE)
     def __str__(self):
         return f"Wand Description: {self.length} {self.core} {self.wood}"
+
+class Photo(models.Model):
+    url = models.CharField(max_length=200)
+    wizard = models.ForeignKey(Wizard, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Photo for wizard_id: {self.wizard_id} @{self.url}"

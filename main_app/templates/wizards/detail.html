@@ -1,66 +1,117 @@
 {% extends 'base.html' %} {% block content %}
 
-<h1> Wizard Details</h1>
+<h1>Wizard Details</h1>
 
 <div class="row">
-    <div class="col s6">
-        <div class="card">
-            <div class="card-content">
-                <span class="card-title">{{ wizard.name }}</span>
-                <!-- <p>Owner: {{ wand.owner }}</p> -->
-                <p>Age: {{ wizard.age }}</p>
-                <p>House: {{ wizard.house }}</p>
-                <p>Profession: {{ wizard.profession }}</p>  
-            </div>
-             <div class="card-action">
-                <a href="{% url 'wizards_update' wizard.id %}"> Edit</a>
-                <a href="{% url 'wizards_delete' wizard.id %}"> Delete</a>
-            </div>
-        </div>
+  <div class="col s6">
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title">{{ wizard.name }}</span>
+        <!-- <p>Owner: {{ wand.owner }}</p> -->
+        <p>Age: {{ wizard.age }}</p>
+        <p>House: {{ wizard.house }}</p>
+        <p>Profession: {{ wizard.profession }}</p>
+      </div>
+      <div class="card-action">
+        <a href="{% url 'wizards_update' wizard.id %}"> Edit</a>
+        <a href="{% url 'wizards_delete' wizard.id %}"> Delete</a>
+      </div>
+    </div>
+
+    {% for photo in wizard.photo_set.all %}
+        <img class="responsive-img card-panel" src="{{photo.url}}" alt="{{wizard.name}}">
+    {% empty %}
+        <div class="card-panel teal-text center-align">No Photos Uploaded</div>
+    {% endfor %}
+
+    <form 
+        action="{% url 'add_photo' wizard.id %}"
+        enctype="multipart/form-data"
+        method="POST"
+        class="card-panel">
+        {% csrf_token %}
+        <input type="file" name="photo-file" />
+        <br /><br />
+        <input type="submit" class="btn" value="Upload Photo" />
+    </form>
+
+    <form action="{% url 'add_wand' wizard.id %}" method="post">
+      {% csrf_token %} {{ wand_form.as_p }}
+      <input type="submit" class="btn" value="Add Wand" />
+    </form>
     </div>
     <div class="col s6">
-        <form action="{% url 'add_wand' wizard.id %}" method="post">
-            {% csrf_token %} {{ wand_form.as_p }}
-            <input type="submit" class="btn" value="Add Wand" />
+      <table class="striped">
+        <thead>
+          <tr>
+            <th>Length</th>
+            <th>Core</th>
+            <th>Wood</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for wand in wizard.wand_set.all %}
+          <tr>
+            <td>{{wand.length}}</td>
+            <td>{{wand.core}}</td>
+            <td>{{wand.wood}}</td>
+            <td>{{wand.get_display}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr />
+  <div class="row">
+    <div class="col s6">
+      <h3>{{wizard.name}}'s Spells</h3>
+      {% if wizard.spells.count %} {% for spell in wizard.spells.all %}
+      <div class="card">
+        <div class="card-content">
+          <div class="card-title">
+            <span> {{spell.name}}</span>
+            {{spell.action}}
+          </div>
+        </div>
+      
+      <div class="card-action">
+        <form
+          action="{% url 'assoc_spell_delete' wizard.id spell.id %}"
+          method="POST">
+        {% csrf_token %}
+            <button type="submit" class="btn red">Remove</button>
         </form>
-        <table class="striped">
-            <thead>
-                <tr>
-                    <th>Length</th>
-                    <th>Core</th>
-                    <th>Wood</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for wand in wizard.wand_set.all %}
-                <tr>
-                    <td>{{wand.length}}</td>
-                    <td>{{wand.core}}</td>
-                    <td>{{wand.wood}}</td>
-                    <td>{{wand.get_display}}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+      </div>
+    </div> 
+      {% endfor %} {% else %}
+      <h5>No Spells</h5>
+      {% endif %}
     </div>
-</div>
-
-<hr />
-<div class="row">
-    <div class="col s6">
-        <h3>{{wizard.name}}'s Spells</h3>
-        {% if wizard.spells.count %} {% for spell in wizard.spells.all %}
-        <div class="card">
-            <div class="card-content">
-                <span class="card-title">
-                    <span> {{spell.name}} 
-                    </span> {{spell.action}}
-                </span>
-            </div>
+  </div>
+  <div class="col s6">
+    <h3>Available Spells</h3>
+    {% if spells.count %} {% for spell in spells.all %}
+    <div class="card">
+      <div class="card-content">
+        <div class="card-title">
+          <span>{{ spell.name }}</span>
+          {{ spell.action }}
         </div>
-        {% endfor %} {% else %}
-        <h5>No Spells</h5>
-        {% endif %}
+      </div>
+
+      <div class="card-action">
+        <form action="{% url 'assoc_spell' wizard.id spell.id %}" method="POST">
+          {% csrf_token %}
+          <button type="submit" class="btn">ADD</button>
+        </form>
+      </div>
     </div>
-</div>
-{% endblock %}
+    {% endfor %} 
+  {% else %}
+    <h5>{{ wizard.name }} Already Has All Spells Available</h5>
+    {% endif %}
+  </div>
+  {% endblock %}
+

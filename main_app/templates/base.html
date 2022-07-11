@@ -28,10 +28,16 @@
           </ul>
           <ul class="right">
             <li><a href="{% url 'about' %}">About</a></li>
+            {% if user.is_authenticated %}
             <li><a href="{% url 'wizards_create' %}">Add Wizard</a></li>
             <li><a href="{% url 'index' %}">View All Wizards</a></li>
             <li><a href="{% url 'spells_index' %}"> View All Spells </a></li>
             <li><a href="{% url 'spells_create' %}"> Add a Spell </a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+            {% else %}
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'signup' %}">Sign Up</a></li>
+            {% endif %}
           </ul>
         </div>
       </nav>

@@ -19,5 +19,6 @@ urlpatterns = [
     path('spells/<int:pk>/update/', views.SpellUpdate.as_view(), name='spells_update'),
     path('spells/<int:pk>/delete/', views.SpellDelete.as_view(), name='spells_delete'),
     path('wizards/<int:wizard_id>/add_photo/', views.add_photo, name='add_photo'),
+    path('accounts/signup/', views.signup, name='signup'),
 ]
 
